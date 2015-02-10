@@ -9,36 +9,46 @@ using namespace std;
 int rand(void); 
 
 //insertion sort algorithm
-void insertionsort(int array[], size_t size) {
-    for(size_t i = 0 ; i < size -1; i++) {
-        size_t j =  i + 1; 
-        int item = array[j];
-        while (j > 0 && item < array[j-1]) {
-            array[j] = array[j-1];
-            j--;
+void insertionsort(int a[], size_t size) {
+    int i, key;
+    for (int j=1; j<= size; j++) {
+        key = a[j];
+        i = j-1;
+        while (i>=0 and a[i]>key){
+            a[i+1] = a[i];
+            i--;
         }
-        array[j] = item;
+        a[i+1] = key;
     }
 }
-//swap procedure for quicksort algorithm
-void swap(int array[], size_t l, size_t r) {
-    int item = array[r]; 
-    array[r] = array[l];
-    array[l] = item;         
+
+
+
+//partition algorithm used in quicksort
+int partition(int a[], int l, int r){
+    int pivot = a[r];
+    int i = l-1;
+    int j = r;
+    while(1){
+        while(a[++i]<pivot && i<=r){}
+        while(a[--j]>pivot && j>=l){}
+        if (i<j)
+                swap(a[i],a[j]);
+        else
+                break;
+    }
+    swap(a[i],a[r]);
+    return i;
 }
+
+
 //quicksort algorithm
-void quicksort(int array[], size_t l, size_t r) {
-    if(l < r) { 
-        size_t bound = l;
-        for (size_t i = l + 1; i < r; i++) { 
-            if (array[i] < array[l]) {
-                swap(array, i, ++bound);
-            }
-        }
-        swap(array, l, bound);
-        quicksort(array, l, bound);
-        quicksort(array, bound + 1, r);
-    }     
+void quicksort(int a[], int l, int r) {
+    if (l<r) {
+        int p = partition(a,l,r);
+        quicksort(a, l, p-1);
+        quicksort(a, p+1, r);
+    }
 }
 
 
@@ -70,7 +80,8 @@ int main()
 
   gettimeofday(&start, NULL);  // get time at start of function
 
-insertionsort(dataArray, size);
+  
+  insertionsort(dataArray, size-1);
   // implement your insertionSort here or call it as a function
   //   =====================InsertionSort===============
   //   You can refer Mark Allan Weiss Third Edition Figure 7.2 page 263
@@ -100,7 +111,7 @@ insertionsort(dataArray, size);
   gettimeofday(&start, NULL);  // get time at start of function
 
 
-quicksort(copyArray,0, size);
+  quicksort(copyArray,0, size-1);
 
   // implement your quicksort here or call it as a function
   // =====================Quicksort ======================
